@@ -11,4 +11,6 @@ HEADERS  += drag-controller.h \
             drag-event-notifier.h
 
 target.path += /usr/local/lib
-INSTALLS += target
+include.path += /usr/local/include/qt-input-tools
+include.files += drag-controller.h
+INSTALLS += target include
