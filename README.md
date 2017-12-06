@@ -7,6 +7,6 @@ Try it with:
 using namespace QtInputTools;
 
 void func() {
-  DragController::attach(/*editor*/spinBox, /*mode*/DragController::LINEAR, /*sensitivity*/0.5)
+  DragController::attach(/*editor*/spinBox, /*mode*/DragController::LINEAR, /*sensitivity*/0.5);
 }
 ```
