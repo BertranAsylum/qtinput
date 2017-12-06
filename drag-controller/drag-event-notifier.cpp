@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-using namespace InputTools;
+using namespace QtInputTools;
 
 DragEventNotifier::DragEventNotifier(QObject *parent)
     : QObject(parent) {}

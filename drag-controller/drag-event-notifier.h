@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPoint>
 
-namespace InputTools {
+namespace QtInputTools {
 
 class DragEventNotifier : public QObject {
     Q_OBJECT

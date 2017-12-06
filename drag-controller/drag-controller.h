@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-namespace InputTools {
+namespace QtInputTools {
 
 class DragController : public QObject {
     Q_OBJECT

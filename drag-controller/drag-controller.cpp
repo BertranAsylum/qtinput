@@ -10,7 +10,7 @@
 
 #include "drag-event-notifier.h"
 
-using namespace InputTools;
+using namespace QtInputTools;
 
 void DragController::attach(QWidget *controlled, const Mode &mode, double sensitivity) {
     new DragController(controlled, mode, sensitivity);
