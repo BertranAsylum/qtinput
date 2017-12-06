@@ -46,12 +46,25 @@ double DragController::circularValue(const QPoint &offset, double min, double ma
     if(angle < 0.) {
         angle += 2*M_PI;
     }
+    angle = gluedAngle(angle, QList<double>() << 0. << M_PI_2 << M_PI << 3*M_PI_2 << 2*M_PI);
     return (angle/(2*M_PI)) * (max - min) + min;
 }
 
 double DragController::circularSymValue(const QPoint &offset, double min, double max) {
     double angle = atan2(offset.x(), -offset.y());
+    angle = gluedAngle(angle, QList<double>() << 0. << M_PI_2 << M_PI << -M_PI_2 << -M_PI);
     return ((angle + M_PI)/(2*M_PI)) * (max - min) + min;
+}
+
+double DragController::gluedAngle(double currentAngle, const QList<double> &anchorAngles) {
+    double threshold = 0.2;
+    foreach (double anchorAngle, anchorAngles) {
+        if(currentAngle > anchorAngle - threshold &&
+           currentAngle < anchorAngle + threshold) {
+            return anchorAngle;
+        }
+    }
+    return currentAngle;
 }
 
 void DragController::onPressed() {

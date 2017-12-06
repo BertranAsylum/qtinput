@@ -2,6 +2,7 @@
 #define DRAGCONTROLLER_H
 
 #include <QObject>
+#include <QList>
 
 namespace QtInputTools {
 
@@ -25,6 +26,8 @@ private:
     double linearValue(const QPoint &offset);
     double circularValue(const QPoint &offset, double min, double max);
     double circularSymValue(const QPoint &offset, double min, double max);
+
+    double gluedAngle(double currentAngle, const QList<double> &anchorAngles);
 
 private slots:
     void onPressed();
