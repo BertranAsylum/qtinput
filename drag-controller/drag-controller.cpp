@@ -157,6 +157,9 @@ void DragController::onPressed() {
 void DragController::onReleased() {
     mLastAngle = -1.;
     mTotalAngle = 0.;
+    if(QLineEdit *lineEdit = sender()->parent()->findChild<QLineEdit*>()) {
+        lineEdit->end(false);
+    }
 }
 
 void DragController::onDragged(const QPoint &offset) {
