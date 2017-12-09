@@ -182,10 +182,10 @@ void DragController::showCircularOverlay() {
     DragEventNotifier *dragEventNotifier = static_cast<DragEventNotifier*>(sender());
     QWidget *controlled = static_cast<QWidget*>(dragEventNotifier->parent());
     CircularOverlay *overlay = new CircularOverlay(static_cast<QWidget*>(controlled->parent()));
-    overlay->setGeometry(controlled->x() - 10,
-                         controlled->y() - controlled->width()/2. - 10. + controlled->height()/2.,
-                         controlled->width() + 20.,
-                         controlled->width() + 20.);
+    overlay->setGeometry(controlled->x() - 15,
+                         controlled->y() - controlled->width()/2. - 15. + controlled->height()/2.,
+                         controlled->width() + 30.,
+                         controlled->width() + 30.);
     connect(dragEventNotifier, SIGNAL(dragged(QPoint)), overlay, SLOT(setOffset(QPoint)));
     connect(dragEventNotifier, SIGNAL(dragged(QPoint)), overlay, SLOT(update()));
     connect(dragEventNotifier, SIGNAL(released()), overlay, SLOT(close()));
