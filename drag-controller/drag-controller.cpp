@@ -20,7 +20,10 @@ DragController::DragController(QWidget *controlled, const Mode &mode, double sen
     : QObject(static_cast<QObject*>(controlled)),
       mMode(mode),
       mSensitivity(sensitivity),
-      mLastPressedValue(0.) {
+      mLastPressedValue(0.),
+      mLastAngle(-1.),
+      mTotalAngle(0.),
+      RADIUS_THRESHOLD(50.) {
     installDragEventNotifier(controlled);
 }
 
@@ -29,6 +32,7 @@ void DragController::installDragEventNotifier(QWidget *controlled) {
         if(QLineEdit *lineEdit = controlled->findChild<QLineEdit*>()) {
             DragEventNotifier *dragEventNotifier = new DragEventNotifier(controlled);
             connect(dragEventNotifier, SIGNAL(pressed()), this, SLOT(onPressed()));
+            connect(dragEventNotifier, SIGNAL(released()), this, SLOT(onReleased()));
             connect(dragEventNotifier, SIGNAL(dragged(QPoint)), this, SLOT(onDragged(QPoint)));
             lineEdit->installEventFilter(dragEventNotifier);
         }
@@ -56,6 +60,65 @@ double DragController::circularSymValue(const QPoint &offset, double min, double
     return ((angle + M_PI)/(2*M_PI)) * (max - min) + min;
 }
 
+double DragController::circularInfValue(const QPoint &offset) {
+    double angle = atan2(offset.x(), -offset.y());
+    if(angle < 0.) {
+        angle += 2*M_PI;
+    }
+
+    if(mLastAngle < 0. && offset.manhattanLength() < RADIUS_THRESHOLD) {
+        return mLastPressedValue;
+    } else if(mLastAngle < 0.) {
+        mLastAngle = angle;
+    }
+    while(angle - mLastAngle < -M_PI) {
+        angle += 2*M_PI;
+    }
+    while(angle - mLastAngle > M_PI) {
+        angle -= 2*M_PI;
+    }
+    mTotalAngle += angle - mLastAngle;
+    mLastAngle = angle;
+    return (mLastPressedValue + mTotalAngle*180./M_PI) * mSensitivity;
+}
+
+void DragController::getRange(QObject *controlled, double *min, double *max) {
+    if(QSpinBox *spinBox = dynamic_cast<QSpinBox*>(controlled)) {
+        if(min) *min = spinBox->minimum();
+        if(max) *max = spinBox->maximum();
+    } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
+        if(min) *min = spinBox->minimum();
+        if(max) *max = spinBox->maximum();
+    } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
+        if(min) *min = spinBox->minimumTime().msecsSinceStartOfDay();
+        if(max) *max = spinBox->maximumTime().msecsSinceStartOfDay();
+    }
+}
+
+double DragController::calcValue(const QPoint &offset, double min, double max) {
+    switch(mMode) {
+        case LINEAR: return linearValue(offset);
+        case CIRCULAR: return circularValue(offset, min, max);
+        case CIRCULAR_SYM: return circularSymValue(offset, min, max);
+        case CIRCULAR_INF: return circularInfValue(offset);
+    }
+    return 0.;
+}
+
+void DragController::setValue(QObject *controlled, const QPoint &offset) {
+    double min = 0., max = 0.;
+    getRange(sender()->parent(), &min, &max);
+    double value = calcValue(offset, min, max);
+
+    if(QSpinBox *spinBox = dynamic_cast<QSpinBox*>(controlled)) {
+        spinBox->setValue(qRound(value));
+    } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
+        spinBox->setValue(value);
+    } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
+        spinBox->setTime(QTime::fromMSecsSinceStartOfDay(value * 1000.));
+    }
+}
+
 double DragController::gluedAngle(double currentAngle, const QList<double> &anchorAngles) {
     double threshold = 0.2;
     foreach (double anchorAngle, anchorAngles) {
@@ -74,38 +137,16 @@ void DragController::onPressed() {
     } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
         mLastPressedValue = spinBox->value();
     } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
-        mLastPressedValue = spinBox->time().msecsSinceStartOfDay();
+        mLastPressedValue = spinBox->time().msecsSinceStartOfDay() / 1000.;
     }
 }
 
+void DragController::onReleased() {
+    mLastAngle = -1.;
+    mTotalAngle = 0.;
+}
+
 void DragController::onDragged(const QPoint &offset) {
-    double min = 0.,
-           max = 0.;
-    QObject *controlled = sender()->parent();
-    if(QSpinBox *spinBox = dynamic_cast<QSpinBox*>(controlled)) {
-        min = spinBox->minimum();
-        max = spinBox->maximum();
-    } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
-        min = spinBox->minimum();
-        max = spinBox->maximum();
-    } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
-        min = spinBox->minimumTime().msecsSinceStartOfDay();
-        max = spinBox->maximumTime().msecsSinceStartOfDay();
-    }
-
-    double value = 0.;
-    switch(mMode) {
-        case LINEAR: value = linearValue(offset); break;
-        case CIRCULAR: value = circularValue(offset, min, max); break;
-        case CIRCULAR_SYM: value = circularSymValue(offset, min, max); break;
-    }
-
-    if(QSpinBox *spinBox = dynamic_cast<QSpinBox*>(controlled)) {
-        spinBox->setValue(qRound(value));
-    } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
-        spinBox->setValue(value);
-    } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
-        spinBox->setTime(QTime::fromMSecsSinceStartOfDay(value));
-    }
+    setValue(sender()->parent(), offset);
 }
 

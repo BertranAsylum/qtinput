@@ -17,6 +17,7 @@ protected:
 
 signals:
     void pressed();
+    void released();
     void dragged(const QPoint &offset);
 };
 
