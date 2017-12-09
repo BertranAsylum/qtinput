@@ -1,0 +1,24 @@
+#ifndef OVERLAY_H
+#define OVERLAY_H
+
+#include <QWidget>
+
+class QPropertyAnimation;
+
+namespace QtInputTools {
+
+class Overlay : public QWidget {
+    Q_OBJECT
+    QPropertyAnimation *mAnimation;
+
+public:
+    explicit Overlay(QWidget *parent = 0);
+
+protected:
+    void showEvent(QShowEvent *event);
+    void closeEvent(QCloseEvent *event);
+};
+
+}
+
+#endif // OVERLAY_H

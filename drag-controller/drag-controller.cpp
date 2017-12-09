@@ -9,6 +9,8 @@
 #include <math.h>
 
 #include "drag-event-notifier.h"
+#include "linear-overlay.h"
+#include "circular-overlay.h"
 
 using namespace QtInputTools;
 
@@ -24,16 +26,28 @@ DragController::DragController(QWidget *controlled, const Mode &mode, double sen
       mLastAngle(-1.),
       mTotalAngle(0.),
       RADIUS_THRESHOLD(50.) {
-    installDragEventNotifier(controlled);
+    setupController(controlled);
 }
 
-void DragController::installDragEventNotifier(QWidget *controlled) {
+void DragController::setupController(QWidget *controlled) {
     if(dynamic_cast<QAbstractSpinBox*>(controlled)) {
         if(QLineEdit *lineEdit = controlled->findChild<QLineEdit*>()) {
             DragEventNotifier *dragEventNotifier = new DragEventNotifier(controlled);
             connect(dragEventNotifier, SIGNAL(pressed()), this, SLOT(onPressed()));
             connect(dragEventNotifier, SIGNAL(released()), this, SLOT(onReleased()));
             connect(dragEventNotifier, SIGNAL(dragged(QPoint)), this, SLOT(onDragged(QPoint)));
+
+            switch(mMode) {
+                case LINEAR:
+                    connect(dragEventNotifier, SIGNAL(pressed()), this, SLOT(showLinearOverlay()));
+                    break;
+                case CIRCULAR:
+                case CIRCULAR_SYM:
+                case CIRCULAR_INF:
+                    connect(dragEventNotifier, SIGNAL(pressed()), this, SLOT(showCircularOverlay()));
+                    break;
+            }
+
             lineEdit->installEventFilter(dragEventNotifier);
         }
     } else {
@@ -65,7 +79,6 @@ double DragController::circularInfValue(const QPoint &offset) {
     if(angle < 0.) {
         angle += 2*M_PI;
     }
-
     if(mLastAngle < 0. && offset.manhattanLength() < RADIUS_THRESHOLD) {
         return mLastPressedValue;
     } else if(mLastAngle < 0.) {
@@ -79,7 +92,7 @@ double DragController::circularInfValue(const QPoint &offset) {
     }
     mTotalAngle += angle - mLastAngle;
     mLastAngle = angle;
-    return (mLastPressedValue + mTotalAngle*180./M_PI) * mSensitivity;
+    return mLastPressedValue + mTotalAngle*(180./M_PI) * mSensitivity;
 }
 
 void DragController::getRange(QObject *controlled, double *min, double *max) {
@@ -150,3 +163,28 @@ void DragController::onDragged(const QPoint &offset) {
     setValue(sender()->parent(), offset);
 }
 
+void DragController::showLinearOverlay() {
+    DragEventNotifier *dragEventNotifier = static_cast<DragEventNotifier*>(sender());
+    QWidget *controlled = static_cast<QWidget*>(dragEventNotifier->parent());
+    LinearOverlay *overlay = new LinearOverlay(static_cast<QWidget*>(controlled->parent()));
+    overlay->setGeometry(controlled->x() - 10,
+                         controlled->y() - controlled->width()/2. - 10. + controlled->height()/2.,
+                         controlled->width() + 20.,
+                         controlled->width() + 20.);
+    connect(dragEventNotifier, SIGNAL(released()), overlay, SLOT(close()));
+    overlay->show();
+}
+
+void DragController::showCircularOverlay() {
+    DragEventNotifier *dragEventNotifier = static_cast<DragEventNotifier*>(sender());
+    QWidget *controlled = static_cast<QWidget*>(dragEventNotifier->parent());
+    CircularOverlay *overlay = new CircularOverlay(static_cast<QWidget*>(controlled->parent()));
+    overlay->setGeometry(controlled->x() - 10,
+                         controlled->y() - controlled->width()/2. - 10. + controlled->height()/2.,
+                         controlled->width() + 20.,
+                         controlled->width() + 20.);
+    connect(dragEventNotifier, SIGNAL(dragged(QPoint)), overlay, SLOT(setOffset(QPoint)));
+    connect(dragEventNotifier, SIGNAL(dragged(QPoint)), overlay, SLOT(update()));
+    connect(dragEventNotifier, SIGNAL(released()), overlay, SLOT(close()));
+    overlay->show();
+}

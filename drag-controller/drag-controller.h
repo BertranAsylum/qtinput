@@ -26,7 +26,8 @@ public:
 private:
     explicit DragController(QWidget *controlled, const Mode &mode, double sensitivity);
 
-    void installDragEventNotifier(QWidget *controlled);
+    void setupController(QWidget *controlled);
+
     double linearValue(const QPoint &offset);
     double circularValue(const QPoint &offset, double min, double max);
     double circularSymValue(const QPoint &offset, double min, double max);
@@ -41,6 +42,9 @@ private slots:
     void onPressed();
     void onReleased();
     void onDragged(const QPoint &offset);
+
+    void showLinearOverlay();
+    void showCircularOverlay();
 };
 
 }
