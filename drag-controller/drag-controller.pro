@@ -4,6 +4,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = drag-controller
 TEMPLATE = lib
 
+DESTDIR = ../lib
+OBJECTS_DIR = ../build/objects
+UI_DIR = ../build/ui
+RCC_DIR = ../build/rcc
+
 SOURCES += drag-controller.cpp \
            drag-event-notifier.cpp \
     circular-overlay.cpp \
