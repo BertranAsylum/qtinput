@@ -12,7 +12,7 @@ Overlay::Overlay(QWidget *parent)
 
     mAnimation = new QPropertyAnimation(this, "geometry");
     mAnimation->setDuration(200);
-    mAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    mAnimation->setEasingCurve(QEasingCurve::OutQuad);
 }
 
 void Overlay::showEvent(QShowEvent *event) {

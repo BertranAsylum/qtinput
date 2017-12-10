@@ -27,6 +27,7 @@ private:
     explicit DragController(QWidget *controlled, const Mode &mode, double sensitivity);
 
     void setupController(QWidget *controlled);
+    QRect overlayGeometry(QWidget *controlled);
 
     double linearValue(const QPoint &offset);
     double circularValue(const QPoint &offset, double min, double max);
