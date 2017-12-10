@@ -1,4 +1,6 @@
 *.user
+*.stash
+Makefile
 build/*
 lib/*
 exe/*
