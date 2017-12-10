@@ -6,6 +6,7 @@ TEMPLATE = lib
 
 DESTDIR = ../lib
 OBJECTS_DIR = ../build/objects
+MOC_DIR = ../build/moc
 UI_DIR = ../build/ui
 RCC_DIR = ../build/rcc
 
