@@ -14,18 +14,17 @@ void LinearOverlay::paintEvent(QPaintEvent *event) {
     painter.setPen(Qt::transparent);
     painter.setBrush(QBrush(Qt::gray));
     painter.translate(width()/2., height()/2.);
-    int size = width()/5.;
-    QPolygon polygon = QPolygon() << QPoint(-size, 0) << QPoint(size, 0) << QPoint(0, size/2);
+    QPolygon polygon = QPolygon() << QPoint(-25, 0) << QPoint(25, 0) << QPoint(0, height()/8);
     painter.save();
-    painter.translate(0., width()/5.);
+    painter.translate(0., height()/10. + 6.);
     painter.drawPolygon(polygon);
-    painter.translate(0., width()/5.);
+    painter.translate(0., height()/6.5);
     painter.drawPolygon(polygon);
     painter.restore();
     painter.scale(1., -1.);
-    painter.translate(0., width()/5.);
+    painter.translate(0., height()/10. + 6.);
     painter.drawPolygon(polygon);
-    painter.translate(0., width()/5.);
+    painter.translate(0., height()/6.5);
     painter.drawPolygon(polygon);
     event->accept();
 }

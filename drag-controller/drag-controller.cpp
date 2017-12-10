@@ -57,13 +57,25 @@ void DragController::setupController(QWidget *controlled) {
 }
 
 QRect DragController::overlayGeometry(QWidget *controlled) {
-    QPoint overlayPos = controlled->mapTo(QApplication::activeWindow(),
-                                          QPoint(-15,
-                                                 -controlled->width()/2. - 15. + controlled->height()/2.));
-    return QRect(overlayPos.x(),
-                 overlayPos.y(),
-                 controlled->width() + 30.,
-                 controlled->width() + 30.);
+    QPoint overlayPos;
+    QSize overlaySize;
+    switch(mMode) {
+        case LINEAR:
+            overlayPos = controlled->mapTo(QApplication::activeWindow(),
+                                           QPoint(0, -controlled->height()*2));
+            overlaySize = QSize(controlled->width(),
+                                controlled->height()*5);
+            break;
+        case CIRCULAR:
+        case CIRCULAR_SYM:
+        case CIRCULAR_INF:
+            overlayPos = controlled->mapTo(QApplication::activeWindow(),
+                                           QPoint(-15, -controlled->width()/2-15 + controlled->height()/2));
+            overlaySize = QSize(controlled->width() + 30,
+                                controlled->width() + 30);
+            break;
+    }
+    return QRect(overlayPos, overlaySize);
 }
 
 double DragController::linearValue(const QPoint &offset) {
