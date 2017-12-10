@@ -126,8 +126,8 @@ void DragController::getRange(QObject *controlled, double *min, double *max) {
         if(min) *min = spinBox->minimum();
         if(max) *max = spinBox->maximum();
     } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
-        if(min) *min = spinBox->minimumTime().msecsSinceStartOfDay();
-        if(max) *max = spinBox->maximumTime().msecsSinceStartOfDay();
+        if(min) *min = QTime(0,0,0,0).msecsTo(spinBox->minimumTime());
+        if(max) *max = QTime(0,0,0,0).msecsTo(spinBox->maximumTime());
     }
 }
 
@@ -151,7 +151,7 @@ void DragController::setValue(QObject *controlled, const QPoint &offset) {
     } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
         spinBox->setValue(value);
     } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
-        spinBox->setTime(QTime::fromMSecsSinceStartOfDay(value * 1000.));
+        spinBox->setTime(QTime(0,0,0,0).addMSecs(value * 1000.));
     }
 }
 
@@ -173,7 +173,7 @@ void DragController::onPressed() {
     } else if(QDoubleSpinBox *spinBox = dynamic_cast<QDoubleSpinBox*>(controlled)) {
         mLastPressedValue = spinBox->value();
     } else if(QTimeEdit *spinBox = dynamic_cast<QTimeEdit*>(controlled)) {
-        mLastPressedValue = spinBox->time().msecsSinceStartOfDay() / 1000.;
+        mLastPressedValue = QTime(0,0,0,0).msecsTo(spinBox->time()) / 1000.;
     }
 }
 

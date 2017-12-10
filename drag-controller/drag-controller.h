@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QList>
 
+class QRect;
+class QPoint;
+
 namespace QtInputTools {
 
 class DragController : public QObject {

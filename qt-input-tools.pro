@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS += drag-controller
+SUBDIRS += drag-controller example
