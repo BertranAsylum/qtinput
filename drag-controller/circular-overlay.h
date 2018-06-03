@@ -3,7 +3,7 @@
 
 #include "overlay.h"
 
-namespace QtInputTools {
+namespace qtinput {
 
 class CircularOverlay : public Overlay {
     Q_OBJECT

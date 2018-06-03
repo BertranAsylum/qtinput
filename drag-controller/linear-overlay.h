@@ -3,7 +3,7 @@
 
 #include "overlay.h"
 
-namespace QtInputTools {
+namespace qtinput {
 
 class LinearOverlay : public Overlay {
     Q_OBJECT

@@ -5,7 +5,7 @@
 
 class QPropertyAnimation;
 
-namespace QtInputTools {
+namespace qtinput {
 
 class Overlay : public QWidget {
     Q_OBJECT

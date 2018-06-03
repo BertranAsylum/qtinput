@@ -3,7 +3,7 @@
 #include <QPropertyAnimation>
 #include <QShowEvent>
 
-using namespace QtInputTools;
+using namespace qtinput;
 
 Overlay::Overlay(QWidget *parent)
     : QWidget(parent) {

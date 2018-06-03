@@ -2,53 +2,42 @@
 #define DRAGCONTROLLER_H
 
 #include <QObject>
-#include <QList>
+#include <QScopedPointer>
 
-class QRect;
-class QPoint;
+namespace qtinput {
 
-namespace QtInputTools {
-
+class DragControllerPrivate;
 class DragController : public QObject {
-    Q_OBJECT
-public:
-    enum Mode { LINEAR, CIRCULAR, CIRCULAR_SYM, CIRCULAR_INF };
-
-private:
-    Mode mMode;
-    double mSensitivity;
-    double mLastPressedValue;
-    double mLastAngle;
-    double mTotalAngle;
-
-    const double RADIUS_THRESHOLD;
+    enum Type {
+        Linear,
+        Circular,
+        CircularInf,
+        CircularInfCw
+    };
 
 public:
-    static void attach(QWidget *controlled, const Mode &mode, double sensitivity = 1.);
+    static void attach(QWidget *controlled,
+                       double sensitivity = 1.0);
+    static void attach(QWidget *controlled,
+                       double minPos,
+                       double maxPos);
+    static void attach(QWidget *controlled,
+                       bool clockwise,
+                       double sensitivity = 1.0);
 
 private:
-    explicit DragController(QWidget *controlled, const Mode &mode, double sensitivity);
+    DragController(QWidget *controlled,
+                   double sensitivity);
+    DragController(QWidget *controlled,
+                   double minPos,
+                   double maxPos);
+    DragController(QWidget *controlled,
+                   bool clockwise,
+                   double sensitivity);
 
-    void setupController(QWidget *controlled);
-    QRect overlayGeometry(QWidget *controlled);
-
-    double linearValue(const QPoint &offset);
-    double circularValue(const QPoint &offset, double min, double max);
-    double circularSymValue(const QPoint &offset, double min, double max);
-    double circularInfValue(const QPoint &offset);
-
-    void getRange(QObject *controlled, double *min, double *max);
-    double calcValue(const QPoint &offset, double min, double max);
-    void setValue(QObject *controlled, const QPoint &offset);
-    double gluedAngle(double currentAngle, const QList<double> &anchorAngles);
-
-private slots:
-    void onPressed();
-    void onReleased();
-    void onDragged(const QPoint &offset);
-
-    void showLinearOverlay();
-    void showCircularOverlay();
+private:
+    Q_DECLARE_PRIVATE(DragController)
+    QScopedPointer<DragControllerPrivate> d_ptr;
 };
 
 }

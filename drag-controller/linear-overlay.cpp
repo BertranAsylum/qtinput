@@ -3,7 +3,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 
-using namespace QtInputTools;
+using namespace qtinput;
 
 LinearOverlay::LinearOverlay(QWidget *parent)
     : Overlay(parent) {}

@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <math.h>
 
-using namespace QtInputTools;
+using namespace qtinput;
 
 CircularOverlay::CircularOverlay(QWidget *parent)
     : Overlay(parent) {}
