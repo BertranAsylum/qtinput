@@ -19,7 +19,7 @@ public:
     DragController::Type type = DragController::CircularInfCw;
     double sensitivity = 1.0;
     double minPos = 0.0;
-    double maxPos = 0.0;
+    double maxPos = 2.0*M_PI;
     double lastPressedValue = 0.0;
     double lastAngle = -1.0;
     double totalAngle = 0.0;

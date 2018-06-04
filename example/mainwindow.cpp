@@ -9,8 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     qtinput::DragController::attach(ui->spinBox, 0.05);
-    qtinput::DragController::attach(ui->courseAngleEdit, 270.0, -90.0);
-    qtinput::DragController::attach(ui->courseEdit, -270.0, 90.0);
+    qtinput::DragController::attach(ui->courseAngleEdit, 180.0, 0.0);
+    qtinput::DragController::attach(ui->courseEdit, 0.0, 180.0);
     qtinput::DragController::attach(ui->timeEdit, true, 1.0);
 }
 

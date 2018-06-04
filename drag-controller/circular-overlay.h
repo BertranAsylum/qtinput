@@ -7,13 +7,16 @@ namespace qtinput {
 
 class CircularOverlay : public Overlay {
     Q_OBJECT
-    QPoint mOffset;
+    QPoint m_offset;
+    double m_min = 0.0;
+    double m_max = 2.0*M_PI;
 
 public:
     explicit CircularOverlay(QWidget *parent = 0);
+    void setBounds(double min, double max);
 
 public slots:
-    void setOffset(const QPoint &offset) { mOffset = offset; }
+    void setOffset(const QPoint &offset) { m_offset = offset; }
 
 protected:
     void paintEvent(QPaintEvent *event);

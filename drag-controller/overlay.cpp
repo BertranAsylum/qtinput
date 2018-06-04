@@ -10,9 +10,9 @@ Overlay::Overlay(QWidget *parent)
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TransparentForMouseEvents, true);
 
-    mAnimation = new QPropertyAnimation(this, "geometry");
-    mAnimation->setDuration(200);
-    mAnimation->setEasingCurve(QEasingCurve::OutQuad);
+    m_animation = new QPropertyAnimation(this, "geometry");
+    m_animation->setDuration(200);
+    m_animation->setEasingCurve(QEasingCurve::OutQuad);
 }
 
 void Overlay::showEvent(QShowEvent *event) {
@@ -20,15 +20,15 @@ void Overlay::showEvent(QShowEvent *event) {
     startGeometry.setX(startGeometry.x() + width()/2);
     startGeometry.setY(startGeometry.y() + height()/2);
     startGeometry.setSize(QSize());
-    mAnimation->setStartValue(startGeometry);
-    mAnimation->setEndValue(geometry());
-    mAnimation->start();
+    m_animation->setStartValue(startGeometry);
+    m_animation->setEndValue(geometry());
+    m_animation->start();
     QWidget::showEvent(event);
 }
 
 void Overlay::closeEvent(QCloseEvent *event) {
-    mAnimation->setDirection(QAbstractAnimation::Backward);
-    mAnimation->start();
-    connect(mAnimation, SIGNAL(finished()), this, SLOT(deleteLater()));
+    m_animation->setDirection(QAbstractAnimation::Backward);
+    m_animation->start();
+    connect(m_animation, SIGNAL(finished()), this, SLOT(deleteLater()));
     event->ignore();
 }

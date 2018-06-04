@@ -9,7 +9,7 @@ namespace qtinput {
 
 class Overlay : public QWidget {
     Q_OBJECT
-    QPropertyAnimation *mAnimation;
+    QPropertyAnimation *m_animation;
 
 public:
     explicit Overlay(QWidget *parent = 0);
