@@ -20,8 +20,10 @@ CircularOverlay::CircularOverlay(QWidget *parent)
 }
 
 void CircularOverlay::setBounds(double min, double max) {
-    m_min = min;
-    m_max = max;
+    if(!qFuzzyCompare(min, max)) {
+        m_min = min;
+        m_max = max;
+    }
 }
 
 void CircularOverlay::paintEvent(QPaintEvent *event) {

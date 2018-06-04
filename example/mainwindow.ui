@@ -118,7 +118,7 @@ clockwise</string>
       <item>
        <widget class="QGroupBox" name="groupBox_2">
         <property name="title">
-         <string>Circular symmetrical</string>
+         <string>Circular [-90;90]</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="leftMargin">
@@ -139,10 +139,10 @@ clockwise</string>
             <number>1</number>
            </property>
            <property name="minimum">
-            <double>-180.000000000000000</double>
+            <double>-90.000000000000000</double>
            </property>
            <property name="maximum">
-            <double>180.000000000000000</double>
+            <double>90.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -153,9 +153,7 @@ clockwise</string>
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Drag it circular:
--180° = min
-180° = max
-0° at top,
+1°=1°,
 clockwise</string>
         </property>
         <property name="alignment">
@@ -176,7 +174,7 @@ clockwise</string>
       <item>
        <widget class="QGroupBox" name="groupBox_3">
         <property name="title">
-         <string>Circular</string>
+         <string>Circular [0;360]</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <property name="leftMargin">
@@ -208,9 +206,7 @@ clockwise</string>
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Drag it circular:
-0° = min
-360° = max
-0° at top,
+1°=1°,
 clockwise</string>
         </property>
         <property name="alignment">

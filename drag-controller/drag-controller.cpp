@@ -128,12 +128,20 @@ double DragControllerPrivate::linearValue(const QPoint &offset) {
 double DragControllerPrivate::circularValue(const QPoint &offset, double min, double max) {
     double angle = atan2(-offset.y(), offset.x());
     ADJUST(angle)
-    BOUND(qMin(minPos, maxPos), angle, qMax(minPos, maxPos))
 
+    double adjustedMin = qMin(minPos, maxPos);
+    double adjustedMax = qMax(minPos, maxPos);
+    ADJUST(adjustedMin)
+    ADJUST(adjustedMax)
+    if(!qFuzzyCompare(adjustedMin, adjustedMax)) {
+        BOUND(adjustedMin, angle, adjustedMax)
+    }
+
+    if(angle > qMax(minPos, maxPos)) { angle -= 2.0*M_PI; }
     bool clockwise = minPos > maxPos;
-    double progress = clockwise ? 1.0-NORMALIZED(angle,maxPos,minPos)
-                                : NORMALIZED(angle,minPos,maxPos);
-    return progress * (max - min) + min;
+    double progress = clockwise ? 1.0-NORMALIZED(angle, maxPos, minPos)
+                                : NORMALIZED(angle, minPos, maxPos);
+    return progress*(max-min) + min;
 }
 
 double DragControllerPrivate::circularInfValue(const QPoint &offset, bool clockwise) {
@@ -245,7 +253,11 @@ void DragControllerPrivate::showCircularOverlay() {
     CircularOverlay *overlay = new CircularOverlay(static_cast<QWidget*>(QApplication::activeWindow()));
     overlay->setGeometry(overlayGeometry(static_cast<QWidget*>(mouseEventNotifier->parent())));
     if(type == DragController::Circular) {
-        overlay->setBounds(qMin(minPos, maxPos), qMax(minPos, maxPos));
+        double adjustedMin = qMin(minPos, maxPos);
+        double adjustedMax = qMax(minPos, maxPos);
+        ADJUST(adjustedMin)
+        ADJUST(adjustedMax)
+        overlay->setBounds(adjustedMin, adjustedMax);
     }
 
     connect(mouseEventNotifier, SIGNAL(dragged(QPoint)), overlay, SLOT(setOffset(QPoint)));
