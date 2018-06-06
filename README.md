@@ -20,7 +20,7 @@ void func() {
 </div>
 
 ## Installation
-1. Download zip or clone with ```git clone git@github.com:twister9893/qt-input-tools.git```
+1. Download zip or clone with ```git clone git@github.com:twister9893/qtinput.git```
 2. Execute in project dir:
   ```
   qmake
