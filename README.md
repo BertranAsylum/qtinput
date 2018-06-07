@@ -1,7 +1,7 @@
 # QtInput
 ![QtInputDemo](https://github.com/twister9893/qtinput/blob/master/example/screenshots/demo.gif)
 
-Provides friendly user input into Qt widgets inherited from QLineEdit (like a QSpinBox, QDoubleSpinBox, QTimeEdit)
+Provides friendly user input into Qt widgets inherited from QAbstractSpinBox (like a QSpinBox, QDoubleSpinBox, QTimeEdit)
 * <b>drag-controller</b>: You can change editor's value by dragging it linear or circular gesture.
 Try it with:
 ``` c++
