@@ -1,5 +1,5 @@
-#ifndef MOUSEEVENTNOTIFIER_H
-#define MOUSEEVENTNOTIFIER_H
+#ifndef QTINPUT_MOUSEEVENTNOTIFIER_H
+#define QTINPUT_MOUSEEVENTNOTIFIER_H
 
 #include <QObject>
 #include <QPoint>
@@ -8,19 +8,21 @@ namespace qtinput {
 
 class MouseEventNotifier : public QObject {
     Q_OBJECT
-    QPoint m_lastPressedPos;
 public:
-    explicit MouseEventNotifier(QObject *parent = 0);
+    explicit MouseEventNotifier(QObject * parent = nullptr);
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject * watched, QEvent * event);
 
 signals:
     void pressed();
     void released();
-    void dragged(const QPoint &offset);
+    void dragged(const QPoint & offset);
+
+private:
+    QPoint m_lastPressedPos;
 };
 
 }
 
-#endif //MOUSEEVENTNOTIFIER_H
+#endif //QTINPUT_MOUSEEVENTNOTIFIER_H

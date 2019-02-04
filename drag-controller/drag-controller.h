@@ -1,5 +1,5 @@
-#ifndef DRAGCONTROLLER_H
-#define DRAGCONTROLLER_H
+#ifndef QTINPUT_DRAGCONTROLLER_H
+#define QTINPUT_DRAGCONTROLLER_H
 
 #include <QObject>
 #include <QScopedPointer>
@@ -16,30 +16,30 @@ class DragController : public QObject {
     };
 
 public:
-    static void attach(QWidget *controlled,
-                       double sensitivity = 1.0);
-    static void attach(QWidget *controlled,
-                       double minPos,
-                       double maxPos);
-    static void attach(QWidget *controlled,
+    static void attach(QWidget * controlled,
+                       qreal sensitivity = 1.0);
+    static void attach(QWidget * controlled,
+                       qreal minPos,
+                       qreal maxPos);
+    static void attach(QWidget * controlled,
                        bool clockwise,
-                       double sensitivity = 1.0);
+                       qreal sensitivity = 1.0);
 
 private:
-    DragController(QWidget *controlled,
-                   double sensitivity);
-    DragController(QWidget *controlled,
-                   double minPos,
-                   double maxPos);
-    DragController(QWidget *controlled,
+    DragController(QWidget * controlled,
+                   qreal sensitivity);
+    DragController(QWidget * controlled,
+                   qreal minPos,
+                   qreal maxPos);
+    DragController(QWidget * controlled,
                    bool clockwise,
-                   double sensitivity);
+                   qreal sensitivity);
 
 private:
     Q_DECLARE_PRIVATE(DragController)
-    QScopedPointer<DragControllerPrivate> d_ptr;
+    QScopedPointer<DragControllerPrivate> dptr;
 };
 
 }
 
-#endif // DRAGCONTROLLER_H
+#endif // QTINPUT_DRAGCONTROLLER_H
